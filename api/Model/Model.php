@@ -11,15 +11,29 @@ require_once '/RX_Comparer/api/Utils/debug.php';
 require_once '/RX_Comparer/api/Utils/memCheck.php';
 require_once '/RX_Comparer/api/Model/DownloadXML.php';
 require_once '/RX_Comparer/api/Model/XmlToArray.php';
-
+$time1=time();
+//echo "$time1";
+//echo "<br></br>";
 $fileDate = new FileNameGenerator();
 $fileDate=$fileDate->getDate();
 $xmlFile = new DownloadXML($xmlFilePath, $xmlInputFilePath, $fileDate);
 $xmlFile->downloadFile();
 printMem();
 $arrayFromXml = new XmlToArray(0,null);
-$arrayFromXml1 = $arrayFromXml->transformXMLToAssocArr();
-dump($arrayFromXml1[0]);
+$arrayFromXml = $arrayFromXml->transformXMLToAssocArr();
+
+
+foreach($arrayFromXml as $y){
+dump($y);
+
+}
+// var_dump($arrayFromXml);
+
+
+$time2=time();
+$time3 = $time2-$time1;
+echo "$time3";
+echo "<br></br>";
 printMem();
 
 
