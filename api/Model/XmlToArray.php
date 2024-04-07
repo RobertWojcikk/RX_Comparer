@@ -64,8 +64,4 @@ class XmlToArray{
 
   return $array;
   }
-  
-
-}
-//$array[$this->countIx]=[...$arrayFromXML["@attributes"], $a,$b,$c , ...$arrayFromXML["opakowania"]];
-//[...$arrayFromXML["substancjeCzynne"]]
+  }

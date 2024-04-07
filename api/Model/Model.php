@@ -22,12 +22,40 @@ printMem();
 $arrayFromXml = new XmlToArray(0,null);
 $arrayFromXml = $arrayFromXml->transformXMLToAssocArr();
 
+var_dump($arrayFromXml);
 
+//$newArr=[];
+
+
+$i=0;
 foreach($arrayFromXml as $y){
-dump($y);
+
+  if(!array_key_exists("opakowanie", $y)){return;}
+  
+
+  if(array_key_exists("@attributes", $y["opakowanie"])){
+    $newArr[$i]= array_slice($y,0,5);
+    $newArr[$i]["GTIN"]=$y["opakowanie"]["@attributes"]["kodGTIN"] ?? "";
+    $newArr[$i]["kategoriaDostepnosci"]=$y["opakowanie"]["@attributes"]["kategoriaDostepnosci"] ?? "";
+   //dump($newArr[$i]);
+    $i++;
+    
+   } 
+   else
+  {
+    for($j=0; $j<count($y["opakowanie"]);$j++){
+      $newArr[$i]= array_slice($y,0,5);
+      $newArr[$i]["GTIN"]=$y["opakowanie"][$j]["@attributes"]["kodGTIN"] ??"";
+      $newArr[$i]["kategoriaDostepnosci"]=$y["opakowanie"][$j]["@attributes"]["kategoriaDostepnosci"]?? "";
+    
+      $i++;
+    }
+      }
+
 
 }
-// var_dump($arrayFromXml);
+
+
 
 
 $time2=time();
@@ -37,25 +65,3 @@ echo "<br></br>";
 printMem();
 
 
-// $countIx=0;
-
-// $xml = new XMLReader();
-// $xml->open('/RX_Comparer/api/Database/dowloadedXML2024-04-05.xml');
-
-
-// $array=[];
-// while($xml->read() && $xml->name != 'produktLeczniczy')
-// {
-//   ;
-// }
-
-// while($xml->name =="produktLeczniczy"){
-//   $element = simplexml_load_string($xml->readOuterXML());
-//   $associateArray = json_decode(json_encode($element), true);	
-//   $array[$countIx]=$associateArray;
-//   $countIx++;
-//   $xml->next("produktLeczniczy");
-//   unset($element);
-//   unset($associateArray);
-// }
-// dump($array);
