@@ -11,6 +11,7 @@ require_once '/RX_Comparer/api/Utils/debug.php';
 require_once '/RX_Comparer/api/Utils/memCheck.php';
 require_once '/RX_Comparer/api/Model/DownloadXML.php';
 require_once '/RX_Comparer/api/Model/XmlToArray.php';
+require_once '/RX_Comparer/api/Model/PrepareForDatabase.php';
 $time1=time();
 //echo "$time1";
 //echo "<br></br>";
@@ -20,44 +21,55 @@ $xmlFile = new DownloadXML($xmlFilePath, $xmlInputFilePath, $fileDate);
 $xmlFile->downloadFile();
 printMem();
 $arrayFromXml = new XmlToArray(0,null);
-$arrayFromXml = $arrayFromXml->transformXMLToAssocArr();
+$arrFromXml = $arrayFromXml->transformXMLToAssocArr();
+$arr = new PrepareForDatabase(0,[]);
+$arr->createArray($arrFromXml);
+$arr1=$arr->substance($arrFromXml);
 
-var_dump($arrayFromXml);
+
+dump($arr1);
+// foreach($arrFromXml as $element){
+// if($element["nazwaProduktu"]==="Twinrix Adult")
+// {
+//   dump($element);
+// }
+// }
+//var_dump($arrayFromXml);
 
 //$newArr=[];
 
 
-$i=0;
-foreach($arrayFromXml as $y){
+// $i=0;
+// foreach($arrayFromXml as $y){
 
-  if(!array_key_exists("opakowanie", $y)){return;}
+//   if(!array_key_exists("opakowanie", $y)){return;}
   
 
-  if(array_key_exists("@attributes", $y["opakowanie"])){
-    $newArr[$i]= array_slice($y,0,5);
-    $newArr[$i]["GTIN"]=$y["opakowanie"]["@attributes"]["kodGTIN"] ?? "";
-    $newArr[$i]["kategoriaDostepnosci"]=$y["opakowanie"]["@attributes"]["kategoriaDostepnosci"] ?? "";
-   //dump($newArr[$i]);
-    $i++;
+//   if(array_key_exists("@attributes", $y["opakowanie"])){
+//     $newArr[$i]= array_slice($y,0,5);
+//     $newArr[$i]["GTIN"]=$y["opakowanie"]["@attributes"]["kodGTIN"] ?? "";
+//     $newArr[$i]["kategoriaDostepnosci"]=$y["opakowanie"]["@attributes"]["kategoriaDostepnosci"] ?? "";
+   
+//     $i++;
     
-   } 
-   else
-  {
-    for($j=0; $j<count($y["opakowanie"]);$j++){
-      $newArr[$i]= array_slice($y,0,5);
-      $newArr[$i]["GTIN"]=$y["opakowanie"][$j]["@attributes"]["kodGTIN"] ??"";
-      $newArr[$i]["kategoriaDostepnosci"]=$y["opakowanie"][$j]["@attributes"]["kategoriaDostepnosci"]?? "";
-    
-      $i++;
-    }
-      }
+//    } 
+//    else
+//   {
+//     for($j=0; $j<count($y["opakowanie"]);$j++){
+//       $newArr[$i]= array_slice($y,0,5);
+//       $newArr[$i]["GTIN"]=$y["opakowanie"][$j]["@attributes"]["kodGTIN"] ??"";
+//       $newArr[$i]["kategoriaDostepnosci"]=$y["opakowanie"][$j]["@attributes"]["kategoriaDostepnosci"]?? "";
+          
+//       $i++;
+      
+//     }
+//       }
 
 
-}
+// }
 
 
-
-
+var_dump("fff");
 $time2=time();
 $time3 = $time2-$time1;
 echo "$time3";
