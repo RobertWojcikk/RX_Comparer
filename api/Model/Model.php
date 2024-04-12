@@ -20,15 +20,34 @@ $fileDate=$fileDate->getDate();
 $xmlFile = new DownloadXML($xmlFilePath, $xmlInputFilePath, $fileDate);
 $xmlFile->downloadFile();
 printMem();
-$arrayFromXml = new XmlToArray(0,null);
-$arrFromXml = $arrayFromXml->transformXMLToAssocArr();
-$arr = new PrepareForDatabase(0,[]);
+$arrayFromXml = new XmlToArray(0,null,"");
+$arrFromXml= $arrayFromXml->transformXMLToAssocArr();
+$arr = new PrepareForDatabase(0,[],"");
 $arr->createArray($arrFromXml);
-$arr1=$arr->substance($arrFromXml);
+$arr->getNewArr();
+//unset($arrayFromXml,$arrFromXml,$xmlFile);
+//var_dump($arr->getNewArr());
+//$arr2= $arr->substance($arr1);
+//var_dump($arr->);
+//var_dump($arrFromXml);
+// foreach($arr->getNewArr() as $el){
+// dump($el);
+// echo "<br></br>";
+
+//  }
+
+for($i=0;$i<200; $i++){
+  dump($arr->getNewArr()[$i]);
+
+}
 
 
-dump($arr1);
-// foreach($arrFromXml as $element){
+
+
+
+
+
+ // foreach($arrFromXml as $element){
 // if($element["nazwaProduktu"]==="Twinrix Adult")
 // {
 //   dump($element);
@@ -69,10 +88,10 @@ dump($arr1);
 // }
 
 
-var_dump("fff");
+//var_dump("fff");
 $time2=time();
 $time3 = $time2-$time1;
-echo "$time3";
+echo "time: $time3";
 echo "<br></br>";
 printMem();
 

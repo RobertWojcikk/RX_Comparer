@@ -15,12 +15,48 @@ class XmlToArray{
 
   private int $countIx;
   private ?object $xml;
-
-  public function __construct($countIx, $xml)
+  private ?string $string;
+  public function __construct($countIx, $xml,$string)
   {
   $this->countIx=$countIx;
-  $this->xml = $xml;     
+  $this->xml = $xml;
+  $this->string = $string;     
   }
+
+public function flatten($array){
+  $this->string      = http_build_query($array);
+  $this->string      = urldecode($this->string);
+  $this->string      = str_replace(
+                      array('[',']', "@attributes", "substancjaCzynna"),
+                      array('','', '', '') , 
+                      $this->string
+                  );
+   parse_str($this->string, $flat_array);
+   return $flat_array;
+}
+
+
+// public function flatten($array, $prefix = '') {
+//   $toReplace = ["@attributes"];
+  
+//   $result = array();
+//   foreach($array as $key=>$value) {
+//   if($value===$toReplace){
+//     $value ="";
+//   }  
+//       if(is_array($value)) {
+
+//           $result = $result + $this->flatten($value, $prefix . $key . '.');
+      
+//         }
+//       else {
+//           $result[$prefix . $key] = $value;
+//       }
+//   }
+//   return $result;
+// }
+
+
 
   public function transformXMLToAssocArr():array{
 
@@ -51,15 +87,25 @@ class XmlToArray{
       $arrayFromXML["@attributes"]["id"],
       $arrayFromXML["substancjeCzynne"]["substancjaCzynna"]["@attributes"]["innyOpisIlosci"]
         );
- 
-    $array[$this->countIx]=[
-    ...$arrayFromXML["@attributes"],
-    "substancjeCzynne"=>$arrayFromXML["substancjeCzynne"]["substancjaCzynna"]["@attributes"] ?? $arrayFromXML["substancjeCzynne"],
-    ...$arrayFromXML["opakowania"]];
+  
+      $count = array_key_exists("substancjaCzynna", $arrayFromXML["substancjeCzynne"]) 
+      ? count($arrayFromXML["substancjeCzynne"]["substancjaCzynna"])
+      : 1;
+
+      $array[$this->countIx]=
+      [
+        ...$arrayFromXML["@attributes"],
+        ...self::flatten($arrayFromXML["substancjeCzynne"]),
+        "ilość składników" => $count,
+        ...$arrayFromXML["opakowania"]
+      ];
+      //$array[$this->countIx]["suma"]= [...self::countTotalValueOfSubstance($array[$this->countIx], $count)];
+
     $this->countIx++;
     $this->xml->next("produktLeczniczy");
     unset($element);
     unset($arrayFromXML);
+    
   }
 
   return $array;
