@@ -1,6 +1,6 @@
 <?php
 declare(strict_types=1);
-ini_set('memory_limit','2048M');
+ini_set('memory_limit','512M');
 
 //namespace RX_Comparer;
 
@@ -12,6 +12,7 @@ require_once '/RX_Comparer/api/Utils/memCheck.php';
 require_once '/RX_Comparer/api/Model/DownloadXML.php';
 require_once '/RX_Comparer/api/Model/XmlToArray.php';
 require_once '/RX_Comparer/api/Model/PrepareForDatabase.php';
+require_once '/RX_Comparer/api/Model/DownloadXlsx.php';
 $time1=time();
 //echo "$time1";
 //echo "<br></br>";
@@ -19,13 +20,19 @@ $fileDate = new FileNameGenerator();
 $fileDate=$fileDate->getDate();
 $xmlFile = new DownloadXML($xmlFilePath, $xmlInputFilePath, $fileDate);
 $xmlFile->downloadFile();
+unset($xmlFile);
 printMem();
 $arrayFromXml = new XmlToArray(0,null,"");
 $arrFromXml= $arrayFromXml->transformXMLToAssocArr();
+unset($arrayFromXml);
 $arr = new PrepareForDatabase(0,[],"");
 $arr->createArray($arrFromXml);
-$arr->getNewArr();
-//unset($arrayFromXml,$arrFromXml,$xmlFile);
+unset($arrFromXml);
+//dump($arr->getNewArr());
+$getXlsx = new DownloadXlsx($xlsxFilePath, $dirName, $fileDate);
+$getXlsx->downloadFile();
+
+unset($arrayFromXml,$arrFromXml,$xmlFile);
 //var_dump($arr->getNewArr());
 //$arr2= $arr->substance($arr1);
 //var_dump($arr->);
@@ -35,11 +42,14 @@ $arr->getNewArr();
 // echo "<br></br>";
 
 //  }
+// dump(count($arr->getNewArr()));
+// for($i=0;$i<36821; $i++){
+//   if($arr->getNewArr()[$i]["ilość składników"]>9){
+//     dump($arr->getNewArr()[$i]);
+//   }
+  
 
-for($i=0;$i<200; $i++){
-  dump($arr->getNewArr()[$i]);
-
-}
+// }
 
 
 

@@ -1,6 +1,6 @@
 <?php
 declare(strict_types=1);
-ini_set('memory_limit','2048M');
+ini_set('memory_limit','512M');
 
 //namespace RX_Comparer;
 
@@ -23,7 +23,9 @@ class XmlToArray{
   $this->string = $string;     
   }
 
+
 public function flatten($array){
+  $result=[];
   $this->string      = http_build_query($array);
   $this->string      = urldecode($this->string);
   $this->string      = str_replace(
@@ -31,37 +33,28 @@ public function flatten($array){
                       array('','', '', '') , 
                       $this->string
                   );
-   parse_str($this->string, $flat_array);
-   return $flat_array;
-}
-
-
-// public function flatten($array, $prefix = '') {
-//   $toReplace = ["@attributes"];
   
-//   $result = array();
-//   foreach($array as $key=>$value) {
-//   if($value===$toReplace){
-//     $value ="";
-//   }  
-//       if(is_array($value)) {
+   parse_str($this->string, $flat_array);
 
-//           $result = $result + $this->flatten($value, $prefix . $key . '.');
-      
-//         }
-//       else {
-//           $result[$prefix . $key] = $value;
-//       }
-//   }
-//   return $result;
-// }
+   foreach($flat_array as $key=>$value){
+    if(is_numeric($key[0]) && is_numeric($key[1])){
+      $result[substr($key,2) . "_" . $key[0] . $key[1]] =$value;   
+    }
+    if(is_numeric($key[0])){
+      $result[substr($key,1) . "_" . $key[0]] =$value;   
+    }
+    else {
+      return $flat_array;
+    }
+  }
 
-
+   return $result;
+}
 
   public function transformXMLToAssocArr():array{
 
   $this->xml = new XMLReader();
-  $this->xml->open('/RX_Comparer/api/Database/dowloadedXML2024-04-05.xml');
+  $this->xml->open('/RX_Comparer/api/Database/dowloadedXML2024-04-13.xml');
     
   $array=[];
   while($this->xml->read() && $this->xml->name != 'produktLeczniczy')
@@ -103,11 +96,14 @@ public function flatten($array){
 
     $this->countIx++;
     $this->xml->next("produktLeczniczy");
+
     unset($element);
     unset($arrayFromXML);
+    unset($count);
     
   }
+unset($this->xml);
 
-  return $array;
+return $array;
   }
   }

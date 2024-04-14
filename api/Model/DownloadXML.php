@@ -25,6 +25,12 @@ public function ifXmlExist($filePath):bool{
     if(file_exists($filePath)){return true;}
     else{ return false;}
 }
+// private function deleteXml():void{
+// if(self::ifXmlExist($filePath)){
+
+// }
+
+// }
 
 public function downloadFile():void{
     
