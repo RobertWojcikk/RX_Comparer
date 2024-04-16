@@ -16,5 +16,5 @@ class FileNameGenerator {
     $this->fileDate = date('Y-m-d', $currentTime);
     return $this->fileDate;
   }
-
+ 
 }

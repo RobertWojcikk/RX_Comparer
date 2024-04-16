@@ -1,6 +1,7 @@
 <?php
 declare(strict_types=1);
 
+ini_set('max_execution_time', 340); 
 use function PHPUnit\Framework\fileExists;
 
 //namespace RX_Comparer;
@@ -47,7 +48,6 @@ public function downloadFile():void{
     var_dump($e);
     }
 }
-
 
 
 

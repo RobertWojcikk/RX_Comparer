@@ -1,6 +1,7 @@
 <?php
 declare(strict_types=1);
-ini_set('memory_limit','512M');
+ini_set('memory_limit','2048M');
+ini_set('max_execution_time', 240); 
 
 //namespace RX_Comparer;
 
@@ -16,38 +17,75 @@ require_once '/RX_Comparer/api/Model/DownloadXlsx.php';
 require_once '/RX_Comparer/api/Model/XlsxToArray.php';
 
 $time1=time();
-//echo "$time1";
-//echo "<br></br>";
+printMem();
 $fileDate = new FileNameGenerator();
 $fileDate=$fileDate->getDate();
 $xmlFile = new DownloadXML($xmlFilePath, $xmlInputFilePath, $fileDate);
 $xmlFile->downloadFile();
 unset($xmlFile);
-printMem();
-$arrayFromXml = new XmlToArray(0,null,"");
-$arrFromXml= $arrayFromXml->transformXMLToAssocArr();
-unset($arrayFromXml);
-$arr = new PrepareForDatabase(0,[],"");
-$arr->createArray($arrFromXml);
-unset($arrFromXml);
-//dump($arr->getNewArr());
-$getXlsx = new DownloadXlsx($xlsxFilePath, $dirName, $fileDate);
-$getXlsx->downloadFile();
+function empty_generator(): Generator
+{
+    yield from [];
+}
 
-unset($arrayFromXml,$arrFromXml,$xmlFile);
+$arrayFromXml = new XmlToArray(0,null,"", '/RX_Comparer/api/Database/dowloadedXML2024-04-13.xml', empty_generator(),empty_generator());
+//$arrayFromXml->transformXMLToAssocArr('/RX_Comparer/api/Database/dowloadedXML2024-04-13.xml');
+//$arrr=$arrayFromXml->getGenerator('/RX_Comparer/api/Database/dowloadedXML2024-04-13.xml');
+//$arrayFromXml->create('/RX_Comparer/api/Database/dowloadedXML2024-04-13.xml');
+//$returnedArr=$arrayFromXml->getGenerator2('/RX_Comparer/api/Database/dowloadedXML2024-04-13.xml');
+$x=0;
+foreach($arrayFromXml->create('/RX_Comparer/api/Database/dowloadedXML2024-04-13.xml') as $val){
 
-
-
-$ArrayFromXlsx = new XlsxToArray($inputFileName, $inputFileType, $sheetname);
- $valueFromXlsx = $ArrayFromXlsx->mergeArrays();
-
- dump($valueFromXlsx);
-//var_dump($arr->getNewArr());
-
+var_dump($val);
+$x++;
+}
+dump($x);
+//var_dump($returnedArr);
 $time2=time();
 $time3 = $time2-$time1;
 echo "time: $time3";
 echo "<br></br>";
 printMem();
+
+exit();
+//unset($arrayFromXml);
+$arr = new PrepareForDatabase(0,[]);
+//$arr->generator($arrFromXml);
+$arr->createArray($arrFromXml);
+var_dump($arr->getNewArr());
+unset($arrFromXml);
+
+$getXlsx = new DownloadXlsx($xlsxFilePath, $dirName, $fileDate);
+$getXlsx->downloadFile();
+unset($getXlsx);
+
+
+$ArrayFromXlsx = new XlsxToArray($inputFileName, $inputFileType, $sheetname, []);
+ $ArrayFromXlsx->mergeArrays();
+ $ArrayFromXlsx->generator();
+ $r=$ArrayFromXlsx->create();
+//dump($r);
+
+// unset($ArrayFromXlsx);
+
+//  foreach($arr->getNewArr() as $element){
+
+//  }
+// $toCompare=[];
+//  foreach($arr->getNewArr() as $element){
+// if(isset($element["GTIN"])&& strlen($element["GTIN"])>1){
+// $toCompare[]=$element["GTIN"];
+// }
+
+
+//  }
+ 
+
+// dump(array_diff($valueFromXlsx,$toCompare));
+
+
+
+
+
 
 

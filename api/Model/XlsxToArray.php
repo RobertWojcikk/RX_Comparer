@@ -20,13 +20,14 @@ class XlsxToArray{
   private $inputFileName;
   private $sheetname;
   private $arrayFromXlsx;
+  private $array2;
 
 
-  public function __construct($inputFileName, $inputFileType, $sheetname){
+  public function __construct($inputFileName, $inputFileType, $sheetname, $array2){
 $this->inputFileName=$inputFileName;
 $this->inputFileType=$inputFileType;
 $this->sheetname=$sheetname;
-
+$this->array2 =$array2;
   }
 
   private function loadDataFromFile(){
@@ -39,6 +40,8 @@ $this->sheetname=$sheetname;
   return $spreadsheet;
 
   }
+
+
 public function mergeArrays(){
 $spreadsheet = $this->loadDataFromFile();
 
@@ -46,27 +49,32 @@ $sheet1 =$spreadsheet->getSheetByName("A1");
 $sheet2 = $spreadsheet->getSheetByName("A2");
 $sheet3 = $spreadsheet->getSheetByName("A3");
 
-$dataArray = array_merge($sheet1->toArray(),$sheet2->toArray(),$sheet3->toArray());
+$dataArray = array_merge($sheet1->toArray(),array_slice($sheet2->toArray(),2),array_slice($sheet3->toArray(),2));
 
-$array2=array_slice($dataArray,2);
-
-//$i=0;
-//  foreach($array2 as $el){
-//   $arrayFromXlsx[$i]["GTIN"]=$el[4];
-//   $arrayFromXlsx[$i]["Typ"] ="RX_REF";
-//   $i++;
-//  }
-
- foreach($array2 as $el){
-  $arrayFromXlsx[]=$el[4];
-  // $arrayFromXlsx[$i]["Typ"] ="RX_REF";
-  // $i++;
- }
+$this->array2=array_slice($dataArray,2);
+return $this->array2;
 
 
 
-return $arrayFromXlsx;
+//return $arrayFromXlsx;
 }
+
+public function generator (){
+yield $this->array2;
+}
+
+public function create(){
+$generator = self::generator();
+
+foreach ($generator as $value){
+$arrayFromXlsx[] =$value; 
+
+}
+return $arrayFromXlsx;
+
+
+}
+
 
 
 

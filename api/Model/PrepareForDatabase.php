@@ -1,6 +1,6 @@
 <?php
 declare(strict_types=1);
-ini_set('memory_limit','512M');
+ini_set('memory_limit','1024M');
 
 //namespace RX_Comparer;
 
@@ -15,37 +15,39 @@ require_once '/RX_Comparer/api/Model/XmlToArray.php';
 class PrepareForDatabase{
 
   private int $i;
-  public array $newArr;
-  public string $string;
+  private array $newArr;
+ // private string $string;
+// public $arrr;
   
-  public function __construct($i,$newArr,$string){
+  public function __construct($i,$newArr){
       $this->i=$i;
       $this->newArr = $newArr;
-      $this->string = $string;
+      
+    //  $this->string = $string;
 }
 
 public function countTotalValueOfSubstances($array){
   $result =array();
-  if(!array_key_exists("jednostka", $array)){return [];}
+  //if(!array_key_exists("jednostka", $array)){return [];}
   
   if($array["jednostka"]==="tabl." || $array["jednostka"]==="kaps."){
      $unitOfWeight=1;
  
-  for($i=0;$i<$array["ilość składników"];$i++){
+  for($g=0;$g<$array["ilość składników"];$g++){
 
-    if(!array_key_exists("iloscSubstancji_" . $i, $array)){return [null];}
-    $array["iloscSubstancji_".$i] = str_replace(",",".",$array["iloscSubstancji_".$i]);  
+    if(!array_key_exists("iloscSubstancji_" . $g, $array)){return [null];}
+    $array["iloscSubstancji_".$g] = str_replace(",",".",$array["iloscSubstancji_".$g]);  
    
-    if($array["jednostkaMiaryIlosciSubstancji_" . $i] ==="mg"){
+    if($array["jednostkaMiaryIlosciSubstancji_" . $g] ==="mg"){
     $unitOfWeight=1000;
     }elseif (
-    $array["jednostkaMiaryIlosciSubstancji_" . $i] ==="mcg" || 
-    $array["jednostkaMiaryIlosciSubstancji_" . $i] ==="µg"
+    $array["jednostkaMiaryIlosciSubstancji_" . $g] ==="mcg" || 
+    $array["jednostkaMiaryIlosciSubstancji_" . $g] ==="µg"
     ){
     $unitOfWeight=1000000;
     }
 
-   $result["sumaSubst_".$i] = (intval($array["pojemność"]) * floatval($array["iloscSubstancji_" . $i]))/$unitOfWeight;
+   $result["sumaSubst_".$g] = (intval($array["pojemność"]) * floatval($array["iloscSubstancji_" . $g]))/$unitOfWeight;
   
     }
   } 
@@ -81,10 +83,12 @@ private function countTotalValueOfOneSubstance($array){
 
 
 public function createArray($array):?array{
-  foreach($array as $y){
-    if(!array_key_exists("opakowanie", $y)){return [];}
 
-    if(array_key_exists("@attributes", $y["opakowanie"])){
+
+  foreach($array as $y){
+
+
+    if(array_key_exists("opakowanie", $y) && array_key_exists("@attributes", $y["opakowanie"])){
     $this->newArr[$this->i]=[...$y];
     $this->newArr[$this->i]["GTIN"]=$y["opakowanie"]["@attributes"]["kodGTIN"] ?? "";
     $this->newArr[$this->i]["kategoriaDostepnosci"]=$y["opakowanie"]["@attributes"]["kategoriaDostepnosci"] ?? "";
@@ -99,13 +103,13 @@ public function createArray($array):?array{
       : null; 
      
       unset($this->newArr[$this->i]["opakowanie"]);
-      //unset($y);
+     // unset($y);
       $this->i++;
     } 
-     else
+     elseif(array_key_exists("opakowanie", $y) &&  array_key_exists(0, $y["opakowanie"]))
     {
       for($j=0; $j<count($y["opakowanie"]);$j++){
-        $this->newArr[$this->i]=[...$y];
+        $this->newArr[$this->i]=[...$y]; 
         $this->newArr[$this->i]["GTIN"]=$y["opakowanie"][$j]["@attributes"]["kodGTIN"] ??"";
         $this->newArr[$this->i]["kategoriaDostepnosci"]=$y["opakowanie"][$j]["@attributes"]["kategoriaDostepnosci"]?? "";
         $this->newArr[$this->i]["liczbaOpakowań"] =$y["opakowanie"][$j]["jednostkiOpakowania"]["jednostkaOpakowania"]["@attributes"]["liczbaOpakowan"] ?? "";
@@ -125,6 +129,13 @@ public function createArray($array):?array{
  
       }
     }
+    else
+    {
+      $this->newArr[$this->i]=[...$y];
+      $this->i++;
+
+
+    }
 
  unset($y); }
  unset($array);
@@ -135,8 +146,6 @@ public function getNewArr(){
 }
 
   
-
-
 
 
 
