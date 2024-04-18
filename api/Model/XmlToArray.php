@@ -10,10 +10,11 @@ require_once '/RX_Comparer/api/Model/Model.php';
 require_once '/RX_Comparer/api/Utils/debug.php';
 require_once '/RX_Comparer/api/Utils/memCheck.php';
 require_once '/RX_Comparer/api/Model/DownloadXML.php';
+use BenTools\RewindableGenerator;
 
 class XmlToArray{
 
-  private int $countIx;
+  public int $countIx;
   private ?object $xml;
   private ?string $string;
   private string $filename;
@@ -25,7 +26,7 @@ class XmlToArray{
   $this->countIx=$countIx;
   $this->xml = $xml;
   $this->string = $string; 
-  $this->$filename = $filename;   
+ // $this->$filename = $filename;   
   $this->generator = $generator; 
   $this->generator2 = $generator2; 
   }
@@ -147,6 +148,7 @@ foreach(self::transformXMLToAssocArr($filename) as $row){
       $this->countIx++;
   
 }
+return $array;
 }
 // public function getGenerator2($filename){
 

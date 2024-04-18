@@ -31,16 +31,35 @@ function empty_generator(): Generator
 $arrayFromXml = new XmlToArray(0,null,"", '/RX_Comparer/api/Database/dowloadedXML2024-04-13.xml', empty_generator(),empty_generator());
 //$arrayFromXml->transformXMLToAssocArr('/RX_Comparer/api/Database/dowloadedXML2024-04-13.xml');
 //$arrr=$arrayFromXml->getGenerator('/RX_Comparer/api/Database/dowloadedXML2024-04-13.xml');
-//$arrayFromXml->create('/RX_Comparer/api/Database/dowloadedXML2024-04-13.xml');
+//$arr1=$arrayFromXml->create('/RX_Comparer/api/Database/dowloadedXML2024-04-13.xml');
 //$returnedArr=$arrayFromXml->getGenerator2('/RX_Comparer/api/Database/dowloadedXML2024-04-13.xml');
-$x=0;
-foreach($arrayFromXml->create('/RX_Comparer/api/Database/dowloadedXML2024-04-13.xml') as $val){
+// $x=0;
+// foreach( as $val){
 
-var_dump($val);
-$x++;
-}
-dump($x);
+// var_dump($val);
+// $x++;
+// }
+//dump($x);
 //var_dump($returnedArr);
+//$arrayFromXml->create('/RX_Comparer/api/Database/dowloadedXML2024-04-13.xml');
+
+
+//unset($arrayFromXml);
+$arr = new PrepareForDatabase(0,[],0);
+//$arr->generator($arrFromXml);
+//$arr->createArray('/RX_Comparer/api/Database/dowloadedXML2024-04-13.xml');
+//unset($arr1,$arrayFromXml);
+foreach($arr->createArray('/RX_Comparer/api/Database/dowloadedXML2024-04-13.xml') as $val){
+var_dump($val);
+echo "<br></br>";
+
+
+
+}
+
+
+//var_dump($arr->getNewArr());
+
 $time2=time();
 $time3 = $time2-$time1;
 echo "time: $time3";
@@ -48,11 +67,6 @@ echo "<br></br>";
 printMem();
 
 exit();
-//unset($arrayFromXml);
-$arr = new PrepareForDatabase(0,[]);
-//$arr->generator($arrFromXml);
-$arr->createArray($arrFromXml);
-var_dump($arr->getNewArr());
 unset($arrFromXml);
 
 $getXlsx = new DownloadXlsx($xlsxFilePath, $dirName, $fileDate);

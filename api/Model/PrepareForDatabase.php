@@ -11,19 +11,29 @@ require_once '/RX_Comparer/api/Utils/debug.php';
 require_once '/RX_Comparer/api/Utils/memCheck.php';
 require_once '/RX_Comparer/api/Model/DownloadXML.php';
 require_once '/RX_Comparer/api/Model/XmlToArray.php';
+//use iter\func;
+//require '/RX_Comparer/vendor/autoload.php';
+//use BenTools\RewindableGenerator;
 
-class PrepareForDatabase{
+
+class PrepareForDatabase extends XmlToArray{
 
   private int $i;
   private array $newArr;
+  public int $countIx;
  // private string $string;
 // public $arrr;
   
-  public function __construct($i,$newArr){
+  public function __construct($i,$newArr,$countIx){
       $this->i=$i;
       $this->newArr = $newArr;
+      $this->countIx = $countIx;
       
     //  $this->string = $string;
+}
+
+public function generator($filename){
+  yield parent::create($filename);
 }
 
 public function countTotalValueOfSubstances($array){
@@ -59,7 +69,7 @@ private function countTotalValueOfOneSubstance($array){
     !array_key_exists("jednostka", $array) ||
     !array_key_exists("iloscSubstancji", $array) ||
     !array_key_exists("jednostkaMiaryIlosciSubstancji", $array)
-    ){return [0];}
+    ){return null;}
     $array["iloscSubstancji"] = str_replace(",",".",$array["iloscSubstancji"]);
     $result =[];
     $unitOfWeight = 1;    
@@ -81,9 +91,8 @@ private function countTotalValueOfOneSubstance($array){
     }
 }
 
-
-public function createArray($array):?array{
-
+public function createArray($filename):?generator{
+$array = self::create($filename);
 
   foreach($array as $y){
 
@@ -103,8 +112,11 @@ public function createArray($array):?array{
       : null; 
      
       unset($this->newArr[$this->i]["opakowanie"]);
-     // unset($y);
-      $this->i++;
+      //unset($y);
+    
+     yield  $this->newArr[$this->i];
+     unset($this->newArr[$this->i]);
+     $this->i++;
     } 
      elseif(array_key_exists("opakowanie", $y) &&  array_key_exists(0, $y["opakowanie"]))
     {
@@ -123,7 +135,9 @@ public function createArray($array):?array{
         : null;
     
         unset($this->newArr[$this->i]["opakowanie"]);
-        //unset(...$y);
+       // unset($y);
+        yield  $this->newArr[$this->i];
+        unset($this->newArr[$this->i]);
         $this->i++;
  
  
@@ -132,6 +146,9 @@ public function createArray($array):?array{
     else
     {
       $this->newArr[$this->i]=[...$y];
+     // unset($y);
+      yield  $this->newArr[$this->i];
+      unset($this->newArr[$this->i]);
       $this->i++;
 
 
@@ -139,8 +156,80 @@ public function createArray($array):?array{
 
  unset($y); }
  unset($array);
-  return $this->newArr;
+  // return $this->newArr;
 }
+
+
+
+
+
+// public function createArray($array):?array{
+
+
+//   foreach($array as $y){
+
+
+//     if(array_key_exists("opakowanie", $y) && array_key_exists("@attributes", $y["opakowanie"])){
+//     $this->newArr[$this->i]=[...$y];
+//     $this->newArr[$this->i]["GTIN"]=$y["opakowanie"]["@attributes"]["kodGTIN"] ?? "";
+//     $this->newArr[$this->i]["kategoriaDostepnosci"]=$y["opakowanie"]["@attributes"]["kategoriaDostepnosci"] ?? "";
+//     $this->newArr[$this->i]["liczbaOpakowań"] =$y["opakowanie"]["jednostkiOpakowania"]["jednostkaOpakowania"]["@attributes"]["liczbaOpakowan"] ?? "";
+//     $this->newArr[$this->i]["pojemność"]=$y["opakowanie"]["jednostkiOpakowania"]["jednostkaOpakowania"]["@attributes"]["pojemnosc"] ??"";  
+//     $this->newArr[$this->i]["jednostka"]=$y["opakowanie"]["jednostkiOpakowania"]["jednostkaOpakowania"]["@attributes"]["jednostkaPojemnosci"]??"";
+//     $this->newArr[$this->i]["ilość składników"]===1 
+//       ? $this->newArr[$this->i]["sumaSubst_0"] = self::countTotalValueOfOneSubstance($this->newArr[$this->i]) 
+//       : null;
+//       $this->newArr[$this->i]["ilość składników"]>1
+//       ? $this->newArr[$this->i] =array_merge($this->newArr[$this->i],self::countTotalValueOfSubstances($this->newArr[$this->i]))
+//       : null; 
+     
+//       unset($this->newArr[$this->i]["opakowanie"]);
+//      // unset($y);
+//       $this->i++;
+//     } 
+//      elseif(array_key_exists("opakowanie", $y) &&  array_key_exists(0, $y["opakowanie"]))
+//     {
+//       for($j=0; $j<count($y["opakowanie"]);$j++){
+//         $this->newArr[$this->i]=[...$y]; 
+//         $this->newArr[$this->i]["GTIN"]=$y["opakowanie"][$j]["@attributes"]["kodGTIN"] ??"";
+//         $this->newArr[$this->i]["kategoriaDostepnosci"]=$y["opakowanie"][$j]["@attributes"]["kategoriaDostepnosci"]?? "";
+//         $this->newArr[$this->i]["liczbaOpakowań"] =$y["opakowanie"][$j]["jednostkiOpakowania"]["jednostkaOpakowania"]["@attributes"]["liczbaOpakowan"] ?? "";
+//         $this->newArr[$this->i]["pojemność"]=$y["opakowanie"][$j]["jednostkiOpakowania"]["jednostkaOpakowania"]["@attributes"]["pojemnosc"] ??"";  
+//         $this->newArr[$this->i]["jednostka"]=$y["opakowanie"][$j]["jednostkiOpakowania"]["jednostkaOpakowania"]["@attributes"]["jednostkaPojemnosci"]??"";
+//         $this->newArr[$this->i]["ilość składników"]===1 
+//         ? $this->newArr[$this->i]["sumaSubst_0"] = self::countTotalValueOfOneSubstance($this->newArr[$this->i]) 
+//         : null; 
+//         $this->newArr[$this->i]["ilość składników"]>1
+//         ? $this->newArr[$this->i] =array_merge($this->newArr[$this->i],self::countTotalValueOfSubstances($this->newArr[$this->i]))
+//         : null;
+    
+//         unset($this->newArr[$this->i]["opakowanie"]);
+//         //unset(...$y);
+//         $this->i++;
+ 
+ 
+//       }
+//     }
+//     else
+//     {
+//       $this->newArr[$this->i]=[...$y];
+//       $this->i++;
+
+
+//     }
+
+//  unset($y); }
+//  unset($array);
+//   return $this->newArr;
+// }
+
+
+
+
+
+
+
+
 public function getNewArr(){
   return $this->newArr;
 }

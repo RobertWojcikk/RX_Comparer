@@ -4,8 +4,58 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "2ae844a2dbea423548bdcc56adf867ba",
+    "content-hash": "e6fa27512e2bc7df63a01b10a470a656",
     "packages": [
+        {
+            "name": "bentools/rewindable-generator",
+            "version": "1.0.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/bpolaszek/rewindable-generator.git",
+                "reference": "737b724ca7de67cada6add195afb360118c7b5a3"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/bpolaszek/rewindable-generator/zipball/737b724ca7de67cada6add195afb360118c7b5a3",
+                "reference": "737b724ca7de67cada6add195afb360118c7b5a3",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.5"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "@stable",
+                "satooshi/php-coveralls": "@stable",
+                "squizlabs/php_codesniffer": "@stable"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.0.x-dev"
+                }
+            },
+            "autoload": {
+                "classmap": [
+                    "src/RewindableGenerator.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "Now your generators become rewindable.",
+            "keywords": [
+                "generator",
+                "generators",
+                "iterator",
+                "rewindable"
+            ],
+            "support": {
+                "issues": "https://github.com/bpolaszek/rewindable-generator/issues",
+                "source": "https://github.com/bpolaszek/rewindable-generator/tree/master"
+            },
+            "time": "2018-04-26T14:51:02+00:00"
+        },
         {
             "name": "maennchen/zipstream-php",
             "version": "2.4.0",
@@ -253,6 +303,58 @@
                 }
             ],
             "time": "2022-08-04T09:53:51+00:00"
+        },
+        {
+            "name": "nikic/iter",
+            "version": "v2.4.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/nikic/iter.git",
+                "reference": "09cd930fa9ff55747f34c7184532a5a1bd2385b1"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/nikic/iter/zipball/09cd930fa9ff55747f34c7184532a5a1bd2385b1",
+                "reference": "09cd930fa9ff55747f34c7184532a5a1bd2385b1",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.1"
+            },
+            "require-dev": {
+                "phpstan/phpstan": "^1.4",
+                "phpunit/phpunit": "^7.0 || ^8.0 || ^9.0",
+                "vimeo/psalm": "^4.18 || ^5.13"
+            },
+            "type": "library",
+            "autoload": {
+                "files": [
+                    "src/iter.func.php",
+                    "src/iter.php",
+                    "src/iter.rewindable.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "authors": [
+                {
+                    "name": "Nikita Popov",
+                    "email": "nikic@php.net"
+                }
+            ],
+            "description": "Iteration primitives using generators",
+            "keywords": [
+                "functional",
+                "generator",
+                "iterator"
+            ],
+            "support": {
+                "issues": "https://github.com/nikic/iter/issues",
+                "source": "https://github.com/nikic/iter/tree/v2.4.0"
+            },
+            "time": "2023-12-10T20:43:19+00:00"
         },
         {
             "name": "phpoffice/phpspreadsheet",
